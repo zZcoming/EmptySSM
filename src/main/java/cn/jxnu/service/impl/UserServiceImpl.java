@@ -22,6 +22,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void save(User user) {
 		userMapper.insertSelective(user);
+//		System.out.println(10 / 0); // 用于测试事务，不测试时注释
+//		userMapper.insertSelective(user);  // 用于测试事务，不测试时注释
 	}
 
 }
