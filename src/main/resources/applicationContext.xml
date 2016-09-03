@@ -58,24 +58,63 @@
 	</bean>
 
 	<!-- aop -->
-	<!--事务的通知-->
+	<!--事务的通知 -->
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
-			<!-- 方法名  传播级别-->
+			<!-- 方法名 传播级别 -->
 			<!-- <tx:method name="transfer" propagation="REQUIRED"/> -->
-			<tx:method name="save*" propagation="REQUIRED"/>
-			<tx:method name="update*" propagation="REQUIRED"/>
-			<tx:method name="delete*" propagation="REQUIRED"/>
-			<tx:method name="*" propagation="NOT_SUPPORTED" read-only="true"/>
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="*" propagation="NOT_SUPPORTED" read-only="true" />
 		</tx:attributes>
 	</tx:advice>
 
-	<!--将事务管理应用在切入点（Pointcut）上-->
+	<!--将事务管理应用在切入点（Pointcut）上 -->
 	<aop:config>
-		<!--这个切面表示所有service层的方法-->
+		<!--这个切面表示所有service层的方法 -->
 		<aop:pointcut id="serviceTransaction"
-		              expression="execution(* cn.jxnu.service.*Service*.*(..))"/>
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceTransaction"/>
+			expression="execution(* cn.jxnu.service.*Service*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceTransaction" />
 	</aop:config>
 
+	<!-- Shiro start-->
+	<!-- Define the realm you want to use to connect to your back-end security 
+		datasource: -->
+	<bean id="myRealm" class="cn.jxnu.realm.UserRealm" />
+
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+	</bean>
+
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- Shiro过滤器 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- Shiro的核心安全接口,这个属性是必须的 -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 身份认证失败，则跳转到登录页面的配置 -->
+		<property name="loginUrl" value="/user/login" />
+		<!-- 登录成功，跳转到成功页面 -->
+		<!-- <property name="successUrl" value="/success"/> -->
+		<!-- 权限认证失败，则跳转到指定页面 -->
+		<property name="unauthorizedUrl" value="/user/login?msg=unlogin or unauthorized" />
+		<!-- Shiro连接约束配置,即过滤链的定义 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/ = anon
+				/user/login = anon
+				/user/home = roles[teacher]
+				/user/save = perms["user:create"]
+				/** = authc
+			</value>
+		</property>
+	</bean>
+	<!-- 开启Shiro注解 pom.xml没有引入包，不要-->
+	<!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" 
+		depends-on="lifecycleBeanPostProcessor"/> <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"> 
+		<property name="securityManager" ref="securityManager"/> </bean> -->
+	<!-- Shiro end -->
 </beans>

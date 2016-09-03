@@ -10,5 +10,8 @@
 	<a href="<%=request.getContextPath()%>/user/home">查看id=1的用户</a><br>
 	<a href="<%=request.getContextPath()%>/user/save?username=Test&password123&age=23">
 		新增一个用户，并查询。username=Test、age=23 </a><br>
+	<a href="<%=request.getContextPath()%>/user/login">登录</a>
+	<a href="<%=request.getContextPath()%>/teacher">teacher</a>
+	<a href="<%=request.getContextPath()%>/student">student</a>
 </body>
 </html>

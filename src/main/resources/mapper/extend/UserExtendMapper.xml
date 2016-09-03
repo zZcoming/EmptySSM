@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jxnu.dao.UserExtendMapper">
+	<resultMap id="BaseResultMap" type="cn.jxnu.model.User">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="age" property="age" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, username, password, age
+	</sql>
+	<select id="selectByUsername" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where username = #{username,jdbcType=VARCHAR}
+	</select>
+	<select id="getRoles" resultType="java.lang.String">
+		select distinct
+		r.role_name
+		from user u
+		left join user_role ur on u.id = ur.user_id
+		left join role r on ur.role_id = r.id
+		where u.username = #{username,jdbcType=VARCHAR}
+	</select>
+	<select id="getPermissions" resultType="java.lang.String">
+		select distinct
+		p.permission_name
+		from user u
+		left join user_role ur on u.id = ur.user_id
+		left join role r on ur.role_id = r.id
+		left join role_permission rp on rp.role_id = r.id
+		left join permission p on rp.permission_id = p.id
+		where u.username = #{username,jdbcType=VARCHAR}
+	</select>
+</mapper>
