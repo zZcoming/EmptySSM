@@ -133,3 +133,5 @@ tips: 启动项目后，welcome-file的链接即为测试用例
    * 顺便把登录之类的功能补全一下，还有role和permission的数据库之类的(连带着generatorConfig.xml也要增加)，index.jsp也增加几个例子
 10. EncodingFilter
    * [Spring中的字符编码过滤器（CharacterEncodingFilter）](http://blog.csdn.net/gaojinshan/article/details/39230635)
+11. 集成SiteMesh（拼接jsp）
+   * 参考链接：[Sitemesh 3 的使用及配置](http://www.cnblogs.com/luotaoyeah/p/3776879.html)
